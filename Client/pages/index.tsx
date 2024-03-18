@@ -8,8 +8,8 @@ import { MdEmail } from "react-icons/md";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { FaUserAlt } from "react-icons/fa";
 import { CiCircleMore } from "react-icons/ci";
-
 import React from "react";
+import FeedCard from "@/Components/FeedCard";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -68,7 +68,9 @@ export default function Home() {
           <button className="bg-[#1d9bf0] w-full p-3 rounded-full mx-[-10px] my-[20px] text-lg">Post</button>
         </div>
       </div>
-      <div className="col-span-6 border border-r-[1px] border-l-[1px] border-gray-400 cursor-pointer transition-all"></div>
+      <div className="col-span-6 border border-r-[1px] border-l-[1px] border-gray-400 cursor-pointer transition-all">
+        <FeedCard/>
+      </div>
       <div className="col-span-3"></div>
     </div>
     </div>
