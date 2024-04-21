@@ -31,3 +31,8 @@ body {
     text-wrap: balance;
   }
 }
+/* Custom CSS to hide the scrollbar while maintaining scrolling functionality */
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0px; 
+  background: transparent;  
+}
