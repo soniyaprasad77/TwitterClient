@@ -8,8 +8,9 @@ import { MdEmail } from "react-icons/md";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { FaUserAlt } from "react-icons/fa";
 import { CiCircleMore } from "react-icons/ci";
-import React from "react";
+import React, { useCallback } from "react";
 import FeedCard from "@/Components/FeedCard";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,6 +59,9 @@ const sideMenuItems: xSidebarButtons[] = [
 ];
 
 export default function Home() {
+  const handleGoogleLogin = useCallback((cred: CredentialResponse)=>{
+    
+  }, [])
   return (
     <div className={inter.className}>
       <div className="grid grid-cols-12 h-screen w-screen pl-40">
@@ -103,7 +107,12 @@ export default function Home() {
           <FeedCard />
         </div>
 
-        <div className="col-span-3"></div>
+        <div className="col-span-3">
+          <div className=" p-5 bg-slate-700 rounded-lg">
+            <h2 className="text-2xl py-2">New to Twitter? </h2>
+          <GoogleLogin onSuccess={(cred)=> console.log(cred)} />
+          </div>
+        </div>
       </div>
     </div>
   );
