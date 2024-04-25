@@ -11,6 +11,9 @@ import { CiCircleMore } from "react-icons/ci";
 import React, { useCallback } from "react";
 import FeedCard from "@/Components/FeedCard";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import toast from "react-hot-toast";
+import { graphQlClient } from "@/clients/api";
+import { verifyUserGoogleTokenQuery } from "@/graphql/queries/user";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -59,17 +62,29 @@ const sideMenuItems: xSidebarButtons[] = [
 ];
 
 export default function Home() {
-  const handleGoogleLogin = useCallback((cred: CredentialResponse)=>{
-    
-  }, [])
+  const handleGoogleLogin = useCallback(async (cred: CredentialResponse) => {
+    const googleToken = cred.credential;
+    if (!googleToken)
+      return toast.error("Google login failed: token not found");
+    const { verifyGoogleToken } = await graphQlClient.request(
+      verifyUserGoogleTokenQuery,
+      { token: googleToken }
+    );
+
+    toast.success("Google login successful: verified Successfully");
+    console.log(verifyGoogleToken);
+    if(verifyGoogleToken){
+      window.localStorage.setItem("twiiter_token", googleToken);
+    }
+  }, []);
   return (
     <div className={inter.className}>
-      <div className="grid grid-cols-12 h-screen w-screen pl-40">
+      <div className="grid grid-cols-12 h-screen w-screen pl-40 flex flex-wrap">
         <div className="col-span-2 pt-1">
-          <div className="text-3xl h-fit hover:bg-slate-800 rounded-full px-3 py-2  w-fit">
+          <div className="text-3xl h-fit hover:bg-slate-800 rounded-full px-3 py-2  w-fit flex flex-wrap">
             <BsTwitterX />
           </div>
-          <div className="mt-4 text-xl font-bold">
+          <div className="mt-4 text-xl font-bold flex flex-wrap">
             <ul>
               {sideMenuItems.map((item) => (
                 <li
@@ -77,7 +92,9 @@ export default function Home() {
                   className="flex flex-start items-center gap-5 hover:bg-slate-800 rounded-full w-fit px-2 py-3 cursor-pointer"
                 >
                   <span className="text-3xl">{item.icon}</span>
-                  <span>{item.title}</span>
+                  <span className="hidden lg:inline md:hidden">
+                    {item.title}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -97,20 +114,14 @@ export default function Home() {
           <FeedCard />
           <FeedCard />
           <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
         </div>
 
         <div className="col-span-3">
-          <div className=" p-5 bg-slate-700 rounded-lg">
+          <div className=" p-5 bg-slate-700 rounded-lg flex flex-wrap">
             <h2 className="text-2xl py-2">New to Twitter? </h2>
-          <GoogleLogin onSuccess={(cred)=> console.log(cred)} />
+            <div className="">
+              <GoogleLogin onSuccess={handleGoogleLogin} />
+            </div>
           </div>
         </div>
       </div>
