@@ -62,24 +62,28 @@ const sideMenuItems: xSidebarButtons[] = [
 ];
 
 export default function Home() {
-  const handleGoogleLogin = useCallback(async (cred: CredentialResponse) => {
+  const handleGoogleLogin = useCallback(
+
+    async (cred: CredentialResponse) => {
+
     const googleToken = cred.credential;
-    if (!googleToken)
-      return toast.error("Google login failed: token not found");
+
+    console.log("google token " + googleToken);
+
+    if (!googleToken) return toast.error("Google login failed: token not found");
+
     const { verifyGoogleToken } = await graphQlClient.request(
       verifyUserGoogleTokenQuery,
       { token: googleToken }
     );
-
+    console.log("verifyGoogleToken" + verifyGoogleToken);
     toast.success("Google login successful: verified Successfully");
-    console.log(verifyGoogleToken);
-    if(verifyGoogleToken){
-      window.localStorage.setItem("twiiter_token", googleToken);
-    }
+    if (verifyGoogleToken) window.localStorage.setItem("twiiter_token", verifyGoogleToken);
+    
   }, []);
   return (
     <div className={inter.className}>
-      <div className="grid grid-cols-12 h-screen w-screen pl-40 flex flex-wrap">
+      <div className="grid grid-cols-12 h-screen w-screen pl-40">
         <div className="col-span-2 pt-1">
           <div className="text-3xl h-fit hover:bg-slate-800 rounded-full px-3 py-2  w-fit flex flex-wrap">
             <BsTwitterX />
