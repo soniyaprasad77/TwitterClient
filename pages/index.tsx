@@ -9,7 +9,7 @@ import { LiaClipboardListSolid } from "react-icons/lia";
 import { FaUserAlt } from "react-icons/fa";
 import { FaImage } from "react-icons/fa6";
 import { CiCircleMore } from "react-icons/ci";
-import React, { use, useCallback } from "react";
+import React, { use, useCallback, useState } from "react";
 import FeedCard from "@/Components/FeedCard";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
@@ -17,6 +17,8 @@ import { graphQlClient } from "@/clients/api";
 import { verifyUserGoogleTokenQuery } from "@/graphql/queries/user";
 import { useCurrentUser } from "@/hooks/user";
 import { QueryClient } from "@tanstack/react-query";
+import { useCreateTweet, useGetAllTweets } from "@/hooks/tweet";
+import { Tweet } from "@/gql/graphql";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -67,6 +69,10 @@ const sideMenuItems: xSidebarButtons[] = [
 export default function Home() {
   const queryclient = new QueryClient();
   const { user } = useCurrentUser();
+  const {tweets=[]} = useGetAllTweets(); 
+  const {mutate} = useCreateTweet();
+  const [content, setContent] =useState("");
+  console.log(tweets);
   const handleSelectImage = () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -74,6 +80,12 @@ export default function Home() {
     input.click();
   };
   console.log(user);
+  const handleCreateTweet = useCallback(() =>{
+          mutate({
+             content
+          })
+          setContent("");
+  },[content, mutate])
   const handleGoogleLogin = useCallback(
     async (cred: CredentialResponse) => {
       const googleToken = cred.credential;
@@ -116,7 +128,8 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <button className="bg-[#1d9bf0] w-full p-3 rounded-full mx-[-10px] my-[20px] text-lg">
+            <button 
+            className="bg-[#1d9bf0] w-full p-3 rounded-full mx-[-10px] my-[20px] text-lg">
               Post
             </button>
           </div>
@@ -155,6 +168,8 @@ export default function Home() {
                 </div>
                 <div className="col-span-11">
                   <textarea
+                    value={content}
+                     onChange={(e)=>setContent(e.target.value)}
                     className="w-full bg-transparent px-3 text-xl border-b border-slate-700"
                     rows={3}
                     placeholder="What's happening?"
@@ -164,7 +179,9 @@ export default function Home() {
                     <FaImage />
                     </div>
 
-                    <button className="bg-[#1d9bf0] px-4 py-2 rounded-full text-sm">
+                    <button 
+                    onClick={handleCreateTweet}
+                    className="bg-[#1d9bf0] px-4 py-2 rounded-full text-sm">
                       Post
                     </button>
                   </div>
@@ -172,16 +189,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
-          <FeedCard />
+          {tweets.map((tweet: Tweet)=> tweet ? <FeedCard key={tweet.id} data={tweet} /> : null)}
         </div>
 
         {!user && (
@@ -191,7 +199,7 @@ export default function Home() {
               <div className="">
                 <GoogleLogin onSuccess={handleGoogleLogin} />
               </div>
-            </div>
+            </div> 
           </div>
         )}
       </div>
