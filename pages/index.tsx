@@ -8,12 +8,14 @@ import { MdEmail } from "react-icons/md";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { FaUserAlt } from "react-icons/fa";
 import { CiCircleMore } from "react-icons/ci";
-import React, { useCallback } from "react";
+import React, { use, useCallback } from "react";
 import FeedCard from "@/Components/FeedCard";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
 import { graphQlClient } from "@/clients/api";
 import { verifyUserGoogleTokenQuery } from "@/graphql/queries/user";
+import { useCurrentUser } from "@/hooks/user";
+import { QueryClient } from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -62,6 +64,9 @@ const sideMenuItems: xSidebarButtons[] = [
 ];
 
 export default function Home() {
+ const queryclient = new QueryClient();
+  const { user } = useCurrentUser();
+  console.log(user);
   const handleGoogleLogin = useCallback(
 
     async (cred: CredentialResponse) => {
@@ -79,12 +84,13 @@ export default function Home() {
     console.log("verifyGoogleToken" + verifyGoogleToken);
     toast.success("Google login successful: verified Successfully");
     if (verifyGoogleToken) window.localStorage.setItem("twiiter_token", verifyGoogleToken);
+    await queryclient.invalidateQueries({ queryKey: ["current-user"] });
     
-  }, []);
+  }, [queryclient]);
   return (
     <div className={inter.className}>
       <div className="grid grid-cols-12 h-screen w-screen pl-40">
-        <div className="col-span-2 pt-1">
+        <div className="col-span-2 pt-1 relative">
           <div className="text-3xl h-fit hover:bg-slate-800 rounded-full px-3 py-2  w-fit flex flex-wrap">
             <BsTwitterX />
           </div>
@@ -106,7 +112,22 @@ export default function Home() {
               Post
             </button>
           </div>
+          {user && (
+          <div className="absolute buttom-5 flex gap-2 items-center hover:bg-slate-800 rounded-full px-3 py-2">
+            {user && user.profileImageURL && (
+              <img 
+              src={user.profileImageURL} 
+              className="rounded-full"
+              alt="profile-pic"
+              height={50}
+              width={50}
+               />
+            )}
+            <h3 className="text-xl">{user.firstName + " " + user.lastName}</h3>
+            </div>
+        )}
         </div>
+       
         <div className="col-span-6  border-r-[1px] border-l-[1px] border-gray-600 h-screen overflow-scroll hide-scrollbar cursor-pointer transition-all">
           <FeedCard />
           <FeedCard />
@@ -120,14 +141,14 @@ export default function Home() {
           <FeedCard />
         </div>
 
-        <div className="col-span-3">
+        {!user && <div className="col-span-3">
           <div className=" p-5 bg-slate-700 rounded-lg flex flex-wrap">
             <h2 className="text-2xl py-2">New to Twitter? </h2>
             <div className="">
               <GoogleLogin onSuccess={handleGoogleLogin} />
             </div>
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );
