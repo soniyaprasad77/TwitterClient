@@ -5,20 +5,22 @@ import React, { use, useCallback, useState } from "react";
 import FeedCard from "@/Components/FeedCard";
 import { useCurrentUser } from "@/hooks/user";
 import { useCreateTweet, useGetAllTweets } from "@/hooks/tweet";
-import { Tweet } from "@/gql/graphql";
+import { Tweet, User } from "@/gql/graphql";
 import TwitterLayout from "@/Components/FeedCard/Layout/TwitterLayout";
+import { GetServerSideProps } from "next";
+import { graphQlClient } from "@/clients/api";
+import { getAllTweetsQuery } from "@/graphql/queries/tweet";
 
 const inter = Inter({ subsets: ["latin"] });
+interface homeProps{
+  tweets: Tweet[];
+}
 
-
-
-export default function Home() {
+export default function Home(props: homeProps) {
  
   const { user } = useCurrentUser();
-  const {tweets=[]} = useGetAllTweets(); 
   const {mutate} = useCreateTweet();
   const [content, setContent] =useState("");
-  console.log(tweets);
   const handleSelectImage = () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -72,9 +74,19 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            {tweets.map((tweet: Tweet)=> tweet ? <FeedCard key={tweet.id} data={tweet} /> : null)}
+            {props.tweets.map((tweet: Tweet)=> tweet ? <FeedCard key={tweet.id} data={tweet} /> : null)}
           </div>
        </TwitterLayout>
     </div>
   );
+}
+
+export const getServerSideProps :GetServerSideProps<homeProps> = async (context)=>{
+ const allTweets = await graphQlClient.request(getAllTweetsQuery);
+  return {
+    props:{
+      tweets: allTweets.getAllTweets as Tweet[]
+
+    }
+  }
 }

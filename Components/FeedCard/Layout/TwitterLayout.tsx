@@ -9,7 +9,7 @@ import React, { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import { BsTwitterX } from "react-icons/bs";
 import { CiCircleMore } from "react-icons/ci";
-import { FaImage, FaUserAlt } from "react-icons/fa";
+import {FaUserAlt } from "react-icons/fa";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoHomeOutline, IoSearchOutline } from "react-icons/io5";
 import { LiaClipboardListSolid } from "react-icons/lia";
@@ -147,7 +147,7 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
                     width={50}
                   />
                 )}
-                <h3 className="text-xl">
+                <h3 className="sm:text-2xl lg:text-2xl">
                   {user.firstName + " " + user.lastName}
                 </h3>
               </div>
@@ -155,7 +155,7 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
           </div>
         </div>
 
-        <div className="col-span-11 pl-14 sm:pl-0  sm:col-span-7 md:col-span-5 border-r-[1px] border-l-[1px] border-gray-600 h-screen overflow-scroll hide-scrollbar cursor-pointer transition-all">
+        <div className="col-span-11 pl-8  sm:pl-0  sm:col-span-7 md:col-span-5 border-r-[1px] border-l-[1px] border-gray-600 h-screen overflow-scroll hide-scrollbar cursor-pointer transition-all">
           {props.children}
         </div>
         <div className="col-span-0 sm:col-span-3 p-5">

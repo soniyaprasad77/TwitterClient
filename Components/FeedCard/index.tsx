@@ -4,6 +4,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { RxActivityLog } from "react-icons/rx";
 import { CiBookmark } from "react-icons/ci";
 import { Tweet } from "@/gql/graphql";
+import Link from "next/link";
 
 interface FeedCardProps {
   data:Tweet
@@ -23,7 +24,11 @@ const FeedCard: React.FC<FeedCardProps> = (props) => {
           /> }       
         </div>
         <div className="col-span-11">
-          <h5>{data.author?.firstName} { data.author?.lastName}</h5>
+        <h5>
+          <Link href={`/${data.author?.id}`}>
+        {data.author?.firstName} { data.author?.lastName}
+          </Link>
+        </h5>
           <p className="pb-4 pt-0">
             {data.content}
           </p>
