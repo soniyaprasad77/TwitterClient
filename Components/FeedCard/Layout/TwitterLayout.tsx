@@ -1,9 +1,11 @@
 import { graphQlClient } from "@/clients/api";
+import { useRouter } from "next/router";
 import { verifyUserGoogleTokenQuery } from "@/graphql/queries/user";
 import { useCurrentUser } from "@/hooks/user";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { QueryClient } from "@tanstack/react-query";
-import React, { useCallback } from "react";
+import Link from "next/link";
+import React, { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import { BsTwitterX } from "react-icons/bs";
 import { CiCircleMore } from "react-icons/ci";
@@ -12,49 +14,13 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoHomeOutline, IoSearchOutline } from "react-icons/io5";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { MdEmail } from "react-icons/md";
+
 interface xSidebarButtons {
   title: string;
   icon: React.ReactNode;
+  link:string;
 }
-const sideMenuItems: xSidebarButtons[] = [
-  {
-    title: "Home",
-    icon: <IoHomeOutline />,
-  },
-  {
-    title: "Explore",
-    icon: <IoSearchOutline />,
-  },
-  {
-    title: "Notifications",
-    icon: <IoMdNotificationsOutline />,
-  },
-  {
-    title: "Messages",
-    icon: <MdEmail />,
-  },
-  {
-    title: "Grok",
-    icon: <LiaClipboardListSolid />,
-  },
-
-  {
-    title: "Lists",
-    icon: <LiaClipboardListSolid />,
-  },
-  {
-    title: "Premium",
-    icon: <BsTwitterX />,
-  },
-  {
-    title: "Profile",
-    icon: <FaUserAlt />,
-  },
-  {
-    title: "More",
-    icon: <CiCircleMore />,
-  },
-];
+ 
 interface TwitterLayoutProps {
   children: React.ReactNode;
 }
@@ -62,6 +28,59 @@ interface TwitterLayoutProps {
 const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
   const queryclient = new QueryClient();
   const { user } = useCurrentUser();
+  const router = useRouter();
+  console.log(router.query)
+  const sideMenuItems: xSidebarButtons[] = useMemo(()=>
+    [
+        {
+          title: "Home",
+          icon: <IoHomeOutline />,
+          link:'/'
+        },
+        {
+          title: "Explore",
+          icon: <IoSearchOutline />,
+          link:'/'
+        },
+        {
+          title: "Notifications",
+          icon: <IoMdNotificationsOutline />,
+          link:"/"
+        },
+        {
+          title: "Messages",
+          icon: <MdEmail />,
+          link:"/"
+        },
+        {
+          title: "Grok",
+          icon: <LiaClipboardListSolid />,
+          link:"/"
+        },
+      
+        {
+          title: "Lists", 
+          icon: <LiaClipboardListSolid />,
+          link:"/"
+        },
+        {
+          title: "Premium",
+          icon: <BsTwitterX />,
+          link:"/"
+        },
+        {
+          title: "Profile",
+          icon: <FaUserAlt />,
+          link:`/${user?.id}`
+        },
+        {
+          title: "More",
+          icon: <CiCircleMore />,
+          link:"/"
+        },
+      ],
+      [user?.id]
+  )
   const handleGoogleLogin = useCallback(
     async (cred: CredentialResponse) => {
       const googleToken = cred.credential;
@@ -84,6 +103,7 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
     [queryclient]
   );
   return (
+
     <div>
       <div className="grid grid-cols-12 h-screen w-screen sm:px-40">
         <div className="col-span-3 pt-1 flex justify-end pr-4 relative">
@@ -96,12 +116,14 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
                 {sideMenuItems.map((item) => (
                   <li
                     key={item.title}
-                    className="flex justify-start items-center gap-5 hover:bg-slate-800 rounded-full w-fit px-2 py-3 cursor-pointer"
+                   
                   >
+                    <Link 
+                     className="flex justify-start items-center gap-5 hover:bg-slate-800 rounded-full w-fit px-2 py-3 cursor-pointer"
+                    href={item.link}>
                     <span className="text-3xl">{item.icon}</span>
-                    <span className="hidden sm:inline">
-                      {item.title}
-                    </span>
+                    <span className="hidden sm:inline">{item.title}</span>
+                    </Link>    
                   </li>
                 ))}
               </ul>

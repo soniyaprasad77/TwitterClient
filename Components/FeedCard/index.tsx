@@ -24,10 +24,10 @@ const FeedCard: React.FC<FeedCardProps> = (props) => {
         </div>
         <div className="col-span-11">
           <h5>{data.author?.firstName} { data.author?.lastName}</h5>
-          <p>
+          <p className="pb-4 pt-0">
             {data.content}
           </p>
-          <div className="flex justify-between text-xl pr-6">
+          <div className="flex justify-between text-xl pr-6 ">
             <div>
               <FiMessageCircle />
             </div>
