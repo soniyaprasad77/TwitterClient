@@ -5,6 +5,7 @@ import { RxActivityLog } from "react-icons/rx";
 import { CiBookmark } from "react-icons/ci";
 import { Tweet } from "@/gql/graphql";
 import Link from "next/link";
+import Image from "next/image";
 
 interface FeedCardProps {
   data:Tweet
@@ -32,6 +33,16 @@ const FeedCard: React.FC<FeedCardProps> = (props) => {
           <p className="pb-4 pt-0">
             {data.content}
           </p>
+          {
+            data.imageURL &&(<Image
+            src={data.imageURL}
+            alt="tweet-pic"
+            className="w-full h-96 object-cover rounded-lg"
+            width={200}
+            height={200}
+            />
+            )
+          }
           <div className="flex justify-between text-xl pr-6 ">
             <div>
               <FiMessageCircle />
