@@ -121,8 +121,7 @@ export default function Home(props: homeProps) {
                 </div>
               </div>
             </div>
-            {tweets.map((tweet: Tweet)=> tweet ? <FeedCard key={tweet.id} data={tweet} /> : null)}
-          </div>
+            {tweets && tweets.map((tweet : Tweet) => tweet ? <FeedCard key={tweet.id} data={tweet} /> : null)}          </div>
        </TwitterLayout>
     </div>
   );
