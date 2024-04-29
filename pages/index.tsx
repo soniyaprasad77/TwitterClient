@@ -1,7 +1,7 @@
 
 import { Inter } from "next/font/google";
 import { FaImage } from "react-icons/fa6";
-import React, { use, useCallback, useState } from "react";
+import React, { use, useCallback, useEffect, useState } from "react";
 import FeedCard from "@/Components/FeedCard";
 import { useCurrentUser } from "@/hooks/user";
 import { useCreateTweet, useGetAllTweets } from "@/hooks/tweet";
@@ -21,9 +21,12 @@ interface homeProps{
 export default function Home(props: homeProps) {
  
   const { user } = useCurrentUser();
-  const {mutate} = useCreateTweet();
+  const {mutate} = useCreateTweet();  
+  const {tweets = props.tweets as Tweet[]} = useGetAllTweets();
   const [content, setContent] =useState("");
   const [imageURL, setImageURL] = useState("");
+ 
+
   const handleInputChangeFile = useCallback((input: HTMLInputElement) => {
     return async (event: Event)=>{
       event.preventDefault();
@@ -47,7 +50,7 @@ export default function Home(props: homeProps) {
         setImageURL(myFilePath);  
       }
     }
-    }, [])
+    }, []) 
   const handleSelectImage =useCallback( () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -118,7 +121,7 @@ export default function Home(props: homeProps) {
                 </div>
               </div>
             </div>
-            {props.tweets.map((tweet: Tweet)=> tweet ? <FeedCard key={tweet.id} data={tweet} /> : null)}
+            {tweets.map((tweet: Tweet)=> tweet ? <FeedCard key={tweet.id} data={tweet} /> : null)}
           </div>
        </TwitterLayout>
     </div>
