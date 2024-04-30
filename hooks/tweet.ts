@@ -13,7 +13,8 @@ export const useCreateTweet =  () => {
         onSuccess: async () =>{
             await queryClient.invalidateQueries({queryKey: ["all-tweets"]})
             toast.success("Tweet created successfully", {id:"1"})
-        }
+        },
+        onError: async () => toast.error("wait for 10 secs before creating another tweet", {id:"1"})
     });
     return mutation;
 };
