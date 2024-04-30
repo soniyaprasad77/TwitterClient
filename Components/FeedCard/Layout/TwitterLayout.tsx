@@ -9,18 +9,19 @@ import React, { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import { BsTwitterX } from "react-icons/bs";
 import { CiCircleMore } from "react-icons/ci";
-import {FaUserAlt } from "react-icons/fa";
+import { FaUserAlt } from "react-icons/fa";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoHomeOutline, IoSearchOutline } from "react-icons/io5";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { MdEmail } from "react-icons/md";
+import Image from 'next/image'
 
 interface xSidebarButtons {
   title: string;
   icon: React.ReactNode;
-  link:string;
+  link: string;
 }
- 
+
 interface TwitterLayoutProps {
   children: React.ReactNode;
 }
@@ -30,56 +31,56 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
   const { user } = useCurrentUser();
   const router = useRouter();
   console.log(router.query)
-  const sideMenuItems: xSidebarButtons[] = useMemo(()=>
+  const sideMenuItems: xSidebarButtons[] = useMemo(() =>
     [
-        {
-          title: "Home",
-          icon: <IoHomeOutline />,
-          link:'/'
-        },
-        {
-          title: "Explore",
-          icon: <IoSearchOutline />,
-          link:'/'
-        },
-        {
-          title: "Notifications",
-          icon: <IoMdNotificationsOutline />,
-          link:"/"
-        },
-        {
-          title: "Messages",
-          icon: <MdEmail />,
-          link:"/"
-        },
-        {
-          title: "Grok",
-          icon: <LiaClipboardListSolid />,
-          link:"/"
-        },
-      
-        {
-          title: "Lists", 
-          icon: <LiaClipboardListSolid />,
-          link:"/"
-        },
-        {
-          title: "Premium",
-          icon: <BsTwitterX />,
-          link:"/"
-        },
-        {
-          title: "Profile",
-          icon: <FaUserAlt />,
-          link:`/${user?.id}`
-        },
-        {
-          title: "More",
-          icon: <CiCircleMore />,
-          link:"/"
-        },
-      ],
-      [user?.id]
+      {
+        title: "Home",
+        icon: <IoHomeOutline />,
+        link: '/'
+      },
+      {
+        title: "Explore",
+        icon: <IoSearchOutline />,
+        link: '/'
+      },
+      {
+        title: "Notifications",
+        icon: <IoMdNotificationsOutline />,
+        link: "/"
+      },
+      {
+        title: "Messages",
+        icon: <MdEmail />,
+        link: "/"
+      },
+      {
+        title: "Grok",
+        icon: <LiaClipboardListSolid />,
+        link: "/"
+      },
+
+      {
+        title: "Lists",
+        icon: <LiaClipboardListSolid />,
+        link: "/"
+      },
+      {
+        title: "Premium",
+        icon: <BsTwitterX />,
+        link: "/"
+      },
+      {
+        title: "Profile",
+        icon: <FaUserAlt />,
+        link: `/${user?.id}`
+      },
+      {
+        title: "More",
+        icon: <CiCircleMore />,
+        link: "/"
+      },
+    ],
+    [user?.id]
   )
   const handleGoogleLogin = useCallback(
     async (cred: CredentialResponse) => {
@@ -116,14 +117,14 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
                 {sideMenuItems.map((item) => (
                   <li
                     key={item.title}
-                   
+
                   >
-                    <Link 
-                     className="flex justify-start items-center gap-5 hover:bg-slate-800 rounded-full w-fit px-2 py-3 cursor-pointer"
-                    href={item.link}>
-                    <span className="text-3xl">{item.icon}</span>
-                    <span className="hidden sm:inline">{item.title}</span>
-                    </Link>    
+                    <Link
+                      className="flex justify-start items-center gap-5 hover:bg-slate-800 rounded-full w-fit px-2 py-3 cursor-pointer"
+                      href={item.link}>
+                      <span className="text-3xl">{item.icon}</span>
+                      <span className="hidden sm:inline">{item.title}</span>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -159,12 +160,45 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
           {props.children}
         </div>
         <div className="col-span-0 sm:col-span-3 p-5">
-          {!user && (
+          {!user ? (
             <div className=" p-5 bg-slate-700 rounded-lg ">
               <h2 className="text-2xl py-2">New to Twitter? </h2>
               <GoogleLogin onSuccess={handleGoogleLogin} />
             </div>
-          )}
+          ) :
+            <div className="px-4 py-3 bg-slate-700 rounded-lg"
+            >
+              <h1 className="my-2 text-2xl mb-5">users you may know</h1>
+              {
+                user?.recommendedUsers?.map(el => 
+                
+                <div className="flex items-center gap-3 mt-5"
+                  key={el?.id}
+                >
+                  {el?.profileImageURL && (
+                    <Image
+                      src={el?.profileImageURL}
+                      className="rounded-full"
+                      width={60}
+                      height={60}
+                      alt="recommended-user"
+                    />
+                  )}
+                 <div className="text-xl">
+                 <div>{el?.firstName}{el?.lastName}</div>
+                 <Link href={`/${el?.id}`}
+                 className="bg-white text-black px-5 py-1 rounded-full w-full text-sm mt-2"
+                 >
+                  
+                 <span>View</span></Link>
+                  </div>
+                </div>)
+              }
+
+            </div>
+
+          }
+
         </div>
       </div>
     </div>

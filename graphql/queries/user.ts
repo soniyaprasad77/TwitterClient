@@ -1,4 +1,4 @@
-import {graphql} from "../../gql"
+import { graphql } from "../../gql"
 
 export const verifyUserGoogleTokenQuery = graphql(`#graphql
 
@@ -15,6 +15,12 @@ query GetCurrentUser {
         email
         lastName
         profileImageURL
+        recommendedUsers{
+               id
+               firstName
+               lastName
+              profileImageURL
+    }
         followers{
           id
           firstName
@@ -49,6 +55,7 @@ query GetUserById($id: ID!) {
     lastName
     id
     profileImageURL
+    
     followers{
           id
           firstName
