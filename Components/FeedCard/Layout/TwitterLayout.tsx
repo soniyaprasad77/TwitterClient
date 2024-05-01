@@ -7,7 +7,7 @@ import { QueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import React, { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
-import { BsTwitterX } from "react-icons/bs";
+import {  BsTwitterX } from "react-icons/bs";
 import { CiCircleMore } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdNotificationsOutline } from "react-icons/io";
@@ -65,11 +65,6 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
         link: "/"
       },
       {
-        title: "Premium",
-        icon: <BsTwitterX />,
-        link: "/"
-      },
-      {
         title: "Profile",
         icon: <FaUserAlt />,
         link: `/${user?.id}`
@@ -107,53 +102,53 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
 
     <div>
       <div className="grid grid-cols-12 h-screen w-screen sm:px-40">
-        <div className="col-span-3 pt-1 flex justify-end pr-4 relative">
-          <div className="absolute gap-2">
-            <div className="text-3xl h-fit hover:bg-slate-800 rounded-full px-3 py-2  w-fit flex flex-wrap">
+        <div className="col-span-2 sm:col-span-3 pt-1 flex sm:justify-end pr-4 relative">
+          <div>
+            <div className="text-2xl h-fit w-fit hover:bg-gray-800 rounded-full p-4 cursor-pointer transition-all">
               <BsTwitterX />
             </div>
-            <div className="mt-1 text-xl pr-4 overflow-y-auto">
+            <div className="mt-1 text-xl pr-4">
               <ul>
                 {sideMenuItems.map((item) => (
-                  <li
-                    key={item.title}
-
-                  >
+                  <li key={item.title}>
                     <Link
-                      className="flex justify-start items-center gap-5 hover:bg-slate-800 rounded-full w-fit px-2 py-3 cursor-pointer"
-                      href={item.link}>
-                      <span className="text-3xl">{item.icon}</span>
+                      className="flex justify-start items-center gap-4 hover:bg-gray-800 rounded-full px-3 py-3 w-fit cursor-pointer mt-2"
+                      href={item.link}
+                    >
+                      <span className=" text-3xl">{item.icon}</span>
                       <span className="hidden sm:inline">{item.title}</span>
                     </Link>
                   </li>
                 ))}
               </ul>
               <div className="mt-5 px-3">
-                <button className="hidden sm:block bg-[#1d9bf0] w-full font-semibold text-lg py-2 px-6 m-0 rounded-full">
-                  Post
+                <button className="hidden sm:block bg-[#1d9bf0] font-semibold text-lg py-2 px-4 rounded-full w-full">
+                  Tweet
                 </button>
-                <button className=" block sm:hidden bg-[#1d9bf0] w-full font-semibold text-lg py-2 px-3  rounded-full">
+                <button className="block sm:hidden bg-[#1d9bf0] font-semibold text-lg py-2 px-4 rounded-full w-full">
                   <BsTwitterX />
                 </button>
               </div>
             </div>
-            {user && (
-              <div className="absolute buttom-5 gap-2 items-center hover:bg-slate-800 rounded-full px-3 py-2">
-                {user && user.profileImageURL && (
-                  <Image
-                    src={user.profileImageURL}
-                    className="rounded-full"
-                    alt="profile-pic"
-                    height={50}
-                    width={50}
-                  />
-                )}
-                <h3 className="sm:text-2xl lg:text-2xl">
-                  {user.firstName + " " + user.lastName}
+          </div>
+          {user && (
+            <div className="absolute bottom-5 flex gap-2 items-center bg-slate-800 px-3 py-2 rounded-full">
+              {user && user.profileImageURL && (
+                <Image
+                  className="rounded-full"
+                  src={user?.profileImageURL}
+                  alt="user-image"
+                  height={50}
+                  width={50}
+                />
+              )}
+              <div className="hidden sm:block">
+                <h3 className="text-xl">
+                  {user.firstName} {user.lastName}
                 </h3>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <div className="col-span-11 pl-8  sm:pl-0  sm:col-span-7 md:col-span-5 border-r-[1px] border-l-[1px] border-gray-600 h-screen overflow-scroll hide-scrollbar cursor-pointer transition-all">
@@ -161,41 +156,39 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
         </div>
         <div className="col-span-0 sm:col-span-3 p-5">
           {!user ? (
-            <div className=" p-5 bg-slate-700 rounded-lg ">
-              <h2 className="text-2xl py-2">New to Twitter? </h2>
+            <div className="p-5 bg-slate-700 rounded-lg">
+              <h1 className="my-2 text-2xl">New to Twitter?</h1>
               <GoogleLogin onSuccess={handleGoogleLogin} />
             </div>
-          ) :
-            <div className="px-4 py-3 bg-slate-700 rounded-lg"
-            >
-              <h1 className="my-2 text-2xl mb-5">users you may know</h1>
-              {
-  user?.recommendedUsers?.map(el => 
-    <div className="flex items-center gap-3 mt-2" key={el?.id}>
-      {el?.profileImageURL && (
-        <Image
-          src={el?.profileImageURL}
-          className="rounded-full"
-          width={60}
-          height={60}
-          alt="recommended-user"
-        />
-      )}
-      <div className="text-lg">
-        <div>{el?.firstName} {el?.lastName}</div>
-        <Link href={`/${el?.id}`}
-          className="bg-white text-black text-sm px-5 py-1 w-full rounded-lg"
-        >
-          <span>View</span>
-        </Link>
-      </div>
-    </div>
-  )
-}
-
+          ) : (
+            <div className="px-4 py-3 bg-slate-800 rounded-lg">
+              <h1 className="my-2 text-2xl mb-5">Users you may know</h1>
+              {user?.recommendedUsers?.map((el) => (
+                <div className="flex items-center gap-3 mt-2" key={el?.id}>
+                  {el?.profileImageURL && (
+                    <Image
+                      src={el?.profileImageURL}
+                      alt="user-image"
+                      className="rounded-full"
+                      width={60}
+                      height={60}
+                    />
+                  )}
+                  <div>
+                    <div className="text-lg">
+                      {el?.firstName} {el?.lastName}
+                    </div>
+                    <Link
+                      href={`/${el?.id}`}
+                      className="bg-white text-black text-sm px-5 py-1 w-full rounded-lg"
+                    >
+                      View
+                    </Link>
+                  </div>
+                </div>
+              ))}
             </div>
-
-          }
+          )}
 
         </div>
       </div>
