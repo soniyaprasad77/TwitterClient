@@ -74,19 +74,19 @@ export default function Home(props: homeProps) {
   }, [content, mutate, imageURL])
 
   return (
-    <div className={inter.className}>
+<div>
       <TwitterLayout>
         <div>
-          <div className="border border-gray-600 border-left-0 border-right-0 border-bottom-0 p-4 hover:transition-all cursor-pointer">
+          <div className="border border-r-0 border-l-0 border-b-0 border-gray-600 p-5 hover:bg-slate-900 transition-all cursor-pointer">
             <div className="grid grid-cols-12 gap-3">
               <div className="col-span-1">
                 {user?.profileImageURL && (
-                  <img
+                  <Image
+                    className="rounded-full"
                     src={user?.profileImageURL}
-                    alt="profile-pic"
+                    alt="user-image"
                     height={50}
                     width={50}
-                    className="rounded-full"
                   />
                 )}
               </div>
@@ -94,34 +94,34 @@ export default function Home(props: homeProps) {
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="w-full bg-transparent px-3 text-xl border-b border-slate-700"
-                  rows={3}
+                  className="w-full bg-transparent text-xl px-3 border-b border-slate-700"
                   placeholder="What's happening?"
+                  rows={3}
                 ></textarea>
                 {imageURL && (
                   <Image
                     src={imageURL}
-                    alt="tweet-pic"
-                    className="w-full h-96 object-cover rounded-lg"
+                    alt="tweet-image"
                     width={300}
                     height={300}
                   />
                 )}
-                <div className="mt-2 text-xl flex justify-between items-center">
-                  <div onClick={handleSelectImage} >
-                    <FaImage />
-                  </div>
-
+                <div className="mt-2 flex justify-between items-center">
+                  <FaImage onClick={handleSelectImage} className="text-xl" />
                   <button
                     onClick={handleCreateTweet}
-                    className="bg-[#1d9bf0] px-4 py-2 rounded-full text-sm">
-                    Post
+                    className="bg-[#1d9bf0] font-semibold text-sm py-2 px-4 rounded-full"
+                  >
+                    Tweet
                   </button>
                 </div>
               </div>
             </div>
           </div>
-          {tweets && tweets.map((tweet) => tweet ? <FeedCard key={tweet.id} data={tweet} /> : null)}          </div>
+        </div>
+        {tweets?.map((tweet) =>
+          tweet ? <FeedCard key={tweet?.id} data={tweet as Tweet} /> : null
+        )}
       </TwitterLayout>
     </div>
   );
