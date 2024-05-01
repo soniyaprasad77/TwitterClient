@@ -140,7 +140,7 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
             {user && (
               <div className="absolute buttom-5 gap-2 items-center hover:bg-slate-800 rounded-full px-3 py-2">
                 {user && user.profileImageURL && (
-                  <img
+                  <Image
                     src={user.profileImageURL}
                     className="rounded-full"
                     alt="profile-pic"
