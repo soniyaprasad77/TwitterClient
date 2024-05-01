@@ -1,7 +1,7 @@
 import { GraphQLClient } from "graphql-request";
 
 const isClient = typeof window !== "undefined";
-const graphQlClient = new GraphQLClient("http://localhost:8000/graphql");
+const graphQlClient = new GraphQLClient("https://d27umj5tly0j02.cloudfront.net/graphql");
 
 console.log(isClient)
 // Function to set Authorization header
