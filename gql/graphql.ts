@@ -73,7 +73,7 @@ export type Tweet = {
 
 export type User = {
   __typename?: 'User';
-  email?: Scalars['String']['output'];
+  email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
   followers?: Maybe<Array<Maybe<User>>>;
   following?: Maybe<Array<Maybe<User>>>;

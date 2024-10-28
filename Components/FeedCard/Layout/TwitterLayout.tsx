@@ -84,6 +84,7 @@ const TwitterLayout: React.FC<TwitterLayoutProps> = (props) => {
   )
   const handleGoogleLogin = useCallback(
     async (cred: CredentialResponse) => {
+      console.log("google login response", cred);
       const googleToken = cred.credential;
 
       console.log("google token " + googleToken);
